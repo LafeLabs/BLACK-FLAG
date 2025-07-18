@@ -1,0 +1,40 @@
+{
+    "html": [
+        "README.md",
+        "ascii.js",
+        "branch.html",
+        "cardboard.css",
+        "dna.txt",
+        "edit-html.html",
+        "edit-index.html",
+        "edit-php.html",
+        "feed.html",
+        "flag.html",
+        "glyph.json",
+        "image-feed.html",
+        "index.html",
+        "link.html",
+        "link.txt",
+        "readme.html",
+        "sketch.html",
+        "text.html",
+        "text.txt",
+        "wall.html",
+        "wall.txt"
+    ],
+    "php": [
+        "branch.txt",
+        "compile-php.txt",
+        "delete-branch.txt",
+        "delete-file.txt",
+        "generate-dna.txt",
+        "list-branches.txt",
+        "list-files.txt",
+        "load-file.txt",
+        "local-replicator.txt",
+        "replicator.txt",
+        "save-file.txt",
+        "save-png.txt",
+        "upload-image.txt"
+    ]
+}
