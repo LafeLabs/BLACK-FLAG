@@ -6,7 +6,7 @@
             <!--Stop Google:-->
     <META NAME="robots" CONTENT="noindex,nofollow">
 
-   <title>LETTER A!</title>    
+   <title>FLAG!</title>    
    <!--
 
    -->
@@ -18,6 +18,12 @@
         background-color:#9f8767;
         font-family:Comic Sans MS;
         font-size:2em;
+    }
+    input{
+        background-color:black;
+        font-family:Courier;
+        color:#00ff00;
+        font-size:1em;
     }
     a{
         display:block;
@@ -35,25 +41,50 @@
         overflow:scroll;
         padding-left:1em;
     }
+    #flagtable input{
+        width:2em;
+    }
 </style>
 <div id = "scroll">
     <A HREF = "../">../</A>
-    <a href = "edit-index.html">edit-index.html</a>
     <a href = "edit-html.html">edit-html.html</a>
-    <a href = "edit-php.html">edit-php.html</a>
-    <a href = "flag.html">flag.html</a> 
+    <a href = "index.html">index.html</a> 
+    <a href = "edit-ascii.html">edit-ascii.html</a>
+    <a href = "flag.html">flag.html</a>
     <a href = "readme.html">readme.html</a>
-    <a href= "branch.html">branch.html</a>
-    <a href = "glyph.json">glyph.json</a>
-
-
+    <a href = "qrcode.html">qrcode.html</a>
+    <a href = "image-feed.html">image-feed.html</a>
+    <input id = "textinput">
+    <table id ="flagtable"></table>
 </div>
 
 <script>
-
+    
 unit = 100;
-letter  = [];
-glyph = [];
+flag = [];
+ascii = [];
+var httpc = new XMLHttpRequest();
+httpc.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        flag = JSON.parse(this.responseText);    
+        
+        var httpc2 = new XMLHttpRequest();
+        httpc2.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                ascii = JSON.parse(this.responseText);
+                drawflag();
+                loadtable();
+            }
+        };
+        httpc2.open("GET", "load-file.php?filename=ascii.txt", true);
+        httpc2.send();
+
+    }
+};
+httpc.open("GET", "load-file.php?filename=flag.txt", true);
+httpc.send();
+
+
 function setup(){
     if(innerWidth > innerHeight){
         unit = innerHeight - 50;
@@ -63,93 +94,49 @@ function setup(){
         unit = innerWidth - 50;
     }
     createCanvas(unit, unit);
-    background(159,135,103);
+    background(0);
     stroke(0);
     strokeWeight(1);
-    var point = {
-        "x":0,
-        "y":1
-    }
-    letter.push(point);
+
 }
 
-quantum = 0.02;
 
 function draw() {
   
-    background(0);
-    stroke("red");
-    fill("red");
-    x = mouseX;
-    y = mouseY;
-    x = quantum*Math.round(x/(quantum*unit))
-    y = quantum*Math.round(y/(quantum*unit))
-
-    stroke("#ff2cb4");
-    fill("#ff2cb4");
-    beginShape();
-    for(var index = 0;index < glyph.length;index++){
-        vertex(glyph[index].x*unit,glyph[index].y*unit);
-    }
-    endShape(CLOSE);
-    
-    stroke("red");
-    fill("red");
-    beginShape();
-    for(var index = 0;index < letter.length;index++){
-        vertex(letter[index].x*unit,letter[index].y*unit);
-    }
-    vertex(x*unit,y*unit);
-    endShape(CLOSE);
-
-    circle(x*unit,y*unit,5);
-
 }
 
 function mouseClicked() {   
-    var point = {
-        "x":x,
-        "y":y
-    }
-    letter.push(point);
-}
 
-glyph = [];
+}
 
 function keyPressed() {
   if (keyCode  === DELETE) {
-        letter.pop();
+
   }
   if(key == ' '){
-    var point = {
-        "x":x,
-        "y":y
-    }
-    letter.push(point);
+
   }
   if(keyCode === RETURN){
-      glyph = JSON.parse(JSON.stringify(letter,null,"   "));
-      saveletter();
+
   }
 }
 
-var httpc = new XMLHttpRequest();
-httpc.onreadystatechange = function(){
-    if (this.readyState == 4 && this.status == 200) {
-        glyph = JSON.parse(this.responseText);
+function drawflag(){
+    background(0);
+    for(var index = 0;index < flag.length;index++){
+        var glyph = ascii[flag[index].character.charCodeAt(0)];
+        fill(flag[index].color);
+        stroke(flag[index].color);
+        blocksize = unit*flag[index].width;
+        beginShape();
+        for(var gindex = 0;gindex < glyph.length;gindex++){
+            vertex(flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize,flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize);
+        }
+        endShape(CLOSE);
     }
-};
-httpc.open("GET", "load-file.php?filename=glyph.json", true);
-httpc.send();
-
-function saveletter(){
-    var url = "save-file.php";        
-    var httpc = new XMLHttpRequest();
-    httpc.open("POST", url, true);
-    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpc.send("data="+encodeURIComponent(JSON.stringify(glyph,null,"    "))+"&filename=glyph.json");//send text to filesaver.php
-    
 }
+
+
 </script>
 </body>
 </html>

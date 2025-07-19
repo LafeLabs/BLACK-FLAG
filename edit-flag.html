@@ -11,7 +11,6 @@
 
    -->
 <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
-<script src="ascii.js"></script>
 </head>
 <body> 
 <style>
@@ -51,7 +50,10 @@
     <a href = "edit-html.html">edit-html.html</a>
     <a href = "index.html">index.html</a> 
     <a href = "edit-ascii.html">edit-ascii.html</a>
-    <a href = "edit-flag.html">edit-flag.html</a>
+    <a href = "flag.html">flag.html</a>
+    <a href = "readme.html">readme.html</a>
+    <a href = "qrcode.html">qrcode.html</a>
+    <a href = "image-feed.html">image-feed.html</a>
     <input id = "textinput">
     <table id ="flagtable"></table>
 </div>
@@ -59,6 +61,29 @@
 <script>
     
 unit = 100;
+flag = [];
+ascii = [];
+var httpc = new XMLHttpRequest();
+httpc.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        flag = JSON.parse(this.responseText);    
+        
+        var httpc2 = new XMLHttpRequest();
+        httpc2.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                ascii = JSON.parse(this.responseText);
+                drawflag();
+                loadtable();
+            }
+        };
+        httpc2.open("GET", "load-file.php?filename=ascii.txt", true);
+        httpc2.send();
+
+    }
+};
+httpc.open("GET", "load-file.php?filename=flag.txt", true);
+httpc.send();
+
 
 function setup(){
     if(innerWidth > innerHeight){
@@ -75,56 +100,6 @@ function setup(){
     stroke("red");
     fill("red");
 
-    flag = [];
-
-    var letter = {};
-    letter.character = "A";
-    letter.color = "RED";
-//    letter.color = "#ff2cb4";
-    letter.x = 0.2;
-    letter.y = 0.5;
-    letter.width = 0.2;
-    flag.push(letter);    
-    var letter = {};
-    letter.character = "C";
-    letter.color = "green";
-    letter.x = 0.4;
-    letter.y = 0.5;
-    letter.width = 0.2;
-    flag.push(letter);    
-    var letter = {};
-    letter.character = "A";
-    letter.color = "blue";
-    letter.x = 0.6;
-    letter.y = 0.5;
-    letter.width = 0.2;
-    flag.push(letter);    
-    var letter = {};
-    letter.character = "B";
-    letter.color = "purple";
-    letter.x = 0.8;
-    letter.y = 0.5;
-    letter.width = 0.2;
-    flag.push(letter);    
-
-    drawflag();
-    loadtable();
-
-/*
-    for(var index = 0;index < flag.length;index++){
-//        capsindex = flag[index].character.charCodeAt(0) - 65;
-        var glyph = ascii[flag[index].character.charCodeAt(0)];
-        fill(flag[index].color);
-        stroke(flag[index].color);
-        blocksize = unit*flag[index].width;
-        beginShape();
-        for(var gindex = 0;gindex < glyph.length;gindex++){
-            vertex(flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize,flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize);
-        }
-        endShape(CLOSE);
-    }
-    */
-    
 }
 
 
@@ -150,7 +125,6 @@ function keyPressed() {
   }
 }
 
-//saveascii();
 
 document.getElementById("textinput").value = "";
 document.getElementById("textinput").select();
@@ -186,6 +160,7 @@ function drawflag(){
         }
         endShape(CLOSE);
     }
+    saveflag();
 }
 
 function loadtable(){
@@ -272,20 +247,13 @@ function loadtable(){
     }
 }
 
-function saveascii(){
-    ascii = [];
-    for(var index = 0;index < 128;index++){
-        ascii.push([]);
-    }
-    for(var index = 0;index < CAPS.length;index++){
-        ascii[0101 + index] = CAPS[index];
-    }
+function saveflag(){
     var httpc = new XMLHttpRequest();
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpc.send("data="+encodeURIComponent(JSON.stringify(ascii,null,"    "))+"&filename=ascii.txt");//send text to filesaver.php
-
+    httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag.txt");//send text to save-file.php
 }
+
 </script>
 </body>
 </html>

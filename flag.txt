@@ -1,0 +1,30 @@
+[
+    {
+        "character": "H",
+        "color": "RED",
+        "x": 0.2,
+        "y": 0.5,
+        "width": "0.15"
+    },
+    {
+        "character": "T",
+        "color": "green",
+        "x": 0.4,
+        "y": 0.5,
+        "width": "0.15"
+    },
+    {
+        "character": "M",
+        "color": "blue",
+        "x": 0.6,
+        "y": 0.5,
+        "width": "0.15"
+    },
+    {
+        "character": "L",
+        "color": "purple",
+        "x": 0.8,
+        "y": 0.5,
+        "width": "0.15"
+    }
+]
