@@ -1,8 +1,10 @@
 ![](qrcode.png)
 
 ![](GITHUBFLAG.PNG)
+![](FLAG-ON-STREET.PNG)
 
-# [BLACK-FLAG](github.com/LafeLabs/BLACK-FLAG)
+# [BLACK-FLAG](https://www.github.com/LafeLabs/BLACK-FLAG)
+
 
 THE BLACK FLAG IS BOTH HTML AND TEXTILE, BOTH ON THE WEB AND BY THE HIGHWAY!
 
@@ -30,6 +32,7 @@ WE CAN SHARE FONTS AND FLAGS USING RAW JSON!
 JUST COPY AND PASTE USING THE HTML EDITOR!
 
  - [index.html](index.html)
+ - [http://localhost/BLACK-FLAG/](http://localhost/BLACK-FLAG/)
  - [edit-flag.html](edit-flag.html)
  - [flag.txt](flag.txt)
  - [ascii.txt](ascii.txt)
