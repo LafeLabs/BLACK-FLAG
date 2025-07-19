@@ -19,6 +19,7 @@
         "index.html",
         "link.html",
         "link.txt",
+        "qrcode.html",
         "readme.html",
         "sketch.html",
         "text.html",

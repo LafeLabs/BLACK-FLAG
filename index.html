@@ -48,9 +48,9 @@
 <div id = "scroll">
     <A HREF = "../">../</A>
     <a href = "edit-html.html">edit-html.html</a>
-    <a href = "index.html">index.html</a> 
+    <a href = "edit-index.html">edit-index.html</a> 
     <a href = "edit-ascii.html">edit-ascii.html</a>
-    <a href = "flag.html">flag.html</a>
+    <a href = "edit-flag.html">edit-flag.html</a>
     <a href = "readme.html">readme.html</a>
     <a href = "qrcode.html">qrcode.html</a>
     <a href = "image-feed.html">image-feed.html</a>
@@ -73,7 +73,6 @@ httpc.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 ascii = JSON.parse(this.responseText);
                 drawflag();
-                loadtable();
             }
         };
         httpc2.open("GET", "load-file.php?filename=ascii.txt", true);
@@ -97,6 +96,8 @@ function setup(){
     background(0);
     stroke(0);
     strokeWeight(1);
+    stroke("red");
+    fill("red");
 
 }
 
@@ -107,7 +108,9 @@ function draw() {
 
 function mouseClicked() {   
 
+    
 }
+
 
 function keyPressed() {
   if (keyCode  === DELETE) {
@@ -120,6 +123,8 @@ function keyPressed() {
 
   }
 }
+
+
 
 function drawflag(){
     background(0);
