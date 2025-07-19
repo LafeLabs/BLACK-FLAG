@@ -59,7 +59,11 @@
     .scrollbutton:active{
         background-color:yellow;
     }
-
+    #jsonio{
+        background-color:black;
+        color:#00ff00;
+        font-family:Courier;
+    }
 </style>
 <div id = "scroll">
     <A HREF = "../">../</A>
@@ -72,6 +76,9 @@
     <a href = "image-feed.html">image-feed.html</a>
     <div class = "scrollbutton" id = "rainbowbutton">RAINBOW</div>
     <div class = "scrollbutton" id = "postbutton">POST</div>
+JSON:    <textarea id = "jsonio"></textarea>
+    <div class = "scrollbutton" id = "importbutton">IMPORT JSON</div>
+
     <input id = "textinput">
     <table id ="flagtable"></table>
 </div>
@@ -103,15 +110,27 @@ document.getElementById("postbutton").onclick = function(){
     png64 = document.getElementById("defaultCanvas0").toDataURL("image/png");
     var timestamp = Math.round((new Date().getTime())/1000).toString();
     var httpc = new XMLHttpRequest();
-    
-    var timestamp = Math.round((new Date().getTime())/1000).toString();
     var url = "save-png.php";        
     httpc.open("POST", url, true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpc.send("data="+encodeURIComponent(png64.substring(22))+"&filename=flag"  + timestamp + ".png");//send text to filesaver.php
      //location.reload(); 
+     
+
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag" + timestamp + ".txt");//send text to save-file.php     
+
+
 }
 
+document.getElementById("importbutton").onclick = function(){
+    flag = JSON.parse(document.getElementById("jsonio").value);
+    drawflag();
+    loadtable();
+
+}
 
 var httpc = new XMLHttpRequest();
 httpc.onreadystatechange = function() {
@@ -124,6 +143,7 @@ httpc.onreadystatechange = function() {
                 ascii = JSON.parse(this.responseText);
                 drawflag();
                 loadtable();
+                document.getElementById("jsonio").value = JSON.stringify(flag,null,"    ");
             }
         };
         httpc2.open("GET", "load-file.php?filename=ascii.txt", true);
@@ -298,6 +318,7 @@ function loadtable(){
 }
 
 function saveflag(){
+    document.getElementById("jsonio").value = JSON.stringify(flag,null,"    ");
     var httpc = new XMLHttpRequest();
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
