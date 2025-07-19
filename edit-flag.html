@@ -44,6 +44,22 @@
     #flagtable input{
         width:2em;
     }
+    .scrollbutton{
+        border:solid;
+        display:block;
+        text-align:center;
+        width:10em;
+        margin:auto;
+        border-radius:10px;
+        cursor:pointer;
+    }
+    .scrollbutton:hover{
+        background-color:green;
+    }
+    .scrollbutton:active{
+        background-color:yellow;
+    }
+
 </style>
 <div id = "scroll">
     <A HREF = "../">../</A>
@@ -54,6 +70,8 @@
     <a href = "readme.html">readme.html</a>
     <a href = "qrcode.html">qrcode.html</a>
     <a href = "image-feed.html">image-feed.html</a>
+    <div class = "scrollbutton" id = "rainbowbutton">RAINBOW</div>
+    <div class = "scrollbutton" id = "postbutton">POST</div>
     <input id = "textinput">
     <table id ="flagtable"></table>
 </div>
@@ -63,6 +81,38 @@
 unit = 100;
 flag = [];
 ascii = [];
+
+rainbow = [
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "purple"
+];
+
+document.getElementById("rainbowbutton").onclick = function(){
+    for(var index = 0;index < flag.length;index++){
+        flag[index].color = rainbow[index%6];
+    }
+    drawflag();
+    loadtable();
+}
+
+document.getElementById("postbutton").onclick = function(){
+    png64 = document.getElementById("defaultCanvas0").toDataURL("image/png");
+    var timestamp = Math.round((new Date().getTime())/1000).toString();
+    var httpc = new XMLHttpRequest();
+    
+    var timestamp = Math.round((new Date().getTime())/1000).toString();
+    var url = "save-png.php";        
+    httpc.open("POST", url, true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(png64.substring(22))+"&filename=flag"  + timestamp + ".png");//send text to filesaver.php
+     //location.reload(); 
+}
+
+
 var httpc = new XMLHttpRequest();
 httpc.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
