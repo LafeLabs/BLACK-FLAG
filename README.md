@@ -44,6 +44,7 @@ CUT, AND STITCH INTO MORE BLACK FLAGS ALONG HIGHWAY!
 SELF-REPLIATING MEDIA MADE OF TRASH ALONG SIDE OF HIGHWAY!
 
  - [index.html](index.html)
+ - [edit-php.html](edit-php.html)
  - [http://localhost/BLACK-FLAG/](http://localhost/BLACK-FLAG/)
  - [edit-flag.html](edit-flag.html)
  - [flag.txt](flag.txt)

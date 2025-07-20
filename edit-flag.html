@@ -89,6 +89,8 @@ unit = 100;
 flag = [];
 ascii = [];
 
+letterindex = 0;
+
 rainbow = [
     "red",
     "orange",
@@ -187,12 +189,43 @@ function keyPressed() {
   if (keyCode  === DELETE) {
 
   }
+  if(key == 'k'){
+     for(var index = 0;index < flag.length;index++){
+         flag[index].width *= 1.1;
+     }
+    drawflag();
+    loadtable();
+  }
+  if(key == 'j'){
+     for(var index = 0;index < flag.length;index++){
+         flag[index].width /= 1.1;
+     }
+    drawflag();
+    loadtable();
+  }
+
   if(key == ' '){
 
   }
   if(keyCode === RETURN){
 
   }
+  if(keyCode === UP_ARROW){
+    letterindex--;
+    if(letterindex < 0){
+        letterindex = flag.length - 1;
+    }
+    drawflag();
+  }
+  if(keyCode === DOWN_ARROW){
+    letterindex++;
+    if(letterindex > flag.length - 1){
+        letterindex = 0;
+    }
+    drawflag();
+  }
+
+    
 }
 
 
@@ -219,6 +252,8 @@ document.getElementById("textinput").onchange = function(){
 
 function drawflag(){
     background(0);
+    strokeWeight(1);
+    
     for(var index = 0;index < flag.length;index++){
         var glyph = ascii[flag[index].character.charCodeAt(0)];
         fill(flag[index].color);
@@ -230,6 +265,11 @@ function drawflag(){
         }
         endShape(CLOSE);
     }
+    strokeWeight(6);
+    stroke("#ff2cb4");
+    noFill();
+    rect(flag[letterindex].x*unit - 0.5*flag[letterindex].width*unit,flag[letterindex].y*unit - 0.5*flag[letterindex].width*unit,flag[letterindex].width*unit,flag[letterindex].width*unit);
+    
     saveflag();
 }
 
