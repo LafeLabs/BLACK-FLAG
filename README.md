@@ -2,6 +2,7 @@
 
 ![](GITHUBFLAG.PNG)
 ![](FLAG-ON-STREET.PNG)
+![](THREE-FLAGS.PNG)
 
 # [BLACK-FLAG](https://www.github.com/LafeLabs/BLACK-FLAG)
 
