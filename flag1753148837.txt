@@ -4,14 +4,14 @@
         "x": 0.1,
         "y": 0.1,
         "width": 0.1,
-        "character": "L"
+        "character": "M"
     },
     {
         "color": "orange",
         "x": 0.22,
         "y": 0.1,
         "width": 0.1,
-        "character": "I"
+        "character": "A"
     },
     {
         "color": "yellow",
@@ -35,123 +35,123 @@
         "character": " "
     },
     {
-        "color": "blue",
+        "color": "#ff2cb4",
         "x": 0.7,
         "y": 0.1,
         "width": 0.1,
-        "character": "A"
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.1,
-        "y": 0.25,
-        "width": 0.1,
         "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.22,
-        "y": 0.25,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "purple",
-        "x": 0.34,
-        "y": 0.25,
-        "width": 0.1,
-        "character": "R"
-    },
-    {
-        "color": "red",
-        "x": 0.46,
-        "y": 0.25,
-        "width": 0.1,
-        "character": "A"
-    },
-    {
-        "color": "orange",
-        "x": 0.58,
-        "y": 0.25,
-        "width": 0.1,
-        "character": "I"
-    },
-    {
-        "color": "yellow",
-        "x": 0.7,
-        "y": 0.25,
-        "width": 0.1,
-        "character": "N"
-    },
-    {
-        "color": "green",
-        "x": 0.1,
-        "y": 0.4,
-        "width": 0.1,
-        "character": "B"
     },
     {
         "color": "blue",
-        "x": 0.22,
-        "y": 0.4,
+        "x": 0.1,
+        "y": 0.25,
         "width": 0.1,
-        "character": "O"
+        "character": "S"
     },
     {
         "color": "purple",
-        "x": 0.34,
-        "y": 0.4,
+        "x": 0.22,
+        "y": 0.25,
         "width": 0.1,
-        "character": "W"
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.46,
-        "y": 0.4,
-        "width": 0.1,
-        "character": " "
+        "character": "A"
     },
     {
         "color": "red",
-        "x": 0.58,
-        "y": 0.4,
-        "width": 0.1,
-        "character": "I"
-    },
-    {
-        "color": "orange",
-        "x": 0.7,
-        "y": 0.4,
+        "x": 0.34,
+        "y": 0.25,
         "width": 0.1,
         "character": "N"
     },
     {
+        "color": "orange",
+        "x": 0.46,
+        "y": 0.25,
+        "width": 0.1,
+        "character": "D"
+    },
+    {
         "color": "#ff2cb4",
-        "x": 0.1,
-        "y": 0.55,
+        "x": 0.58,
+        "y": 0.25,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.7,
+        "y": 0.25,
         "width": 0.1,
         "character": " "
     },
     {
         "color": "yellow",
-        "x": 0.22,
-        "y": 0.55,
-        "width": 0.1,
-        "character": "T"
-    },
-    {
-        "color": "green",
-        "x": 0.34,
-        "y": 0.55,
+        "x": 0.1,
+        "y": 0.4,
         "width": 0.1,
         "character": "H"
     },
     {
+        "color": "green",
+        "x": 0.22,
+        "y": 0.4,
+        "width": 0.1,
+        "character": "I"
+    },
+    {
         "color": "blue",
+        "x": 0.34,
+        "y": 0.4,
+        "width": 0.1,
+        "character": "L"
+    },
+    {
+        "color": "purple",
+        "x": 0.46,
+        "y": 0.4,
+        "width": 0.1,
+        "character": "L"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.58,
+        "y": 0.4,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.7,
+        "y": 0.4,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "red",
+        "x": 0.1,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "R"
+    },
+    {
+        "color": "orange",
+        "x": 0.22,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "O"
+    },
+    {
+        "color": "yellow",
+        "x": 0.34,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "A"
+    },
+    {
+        "color": "green",
         "x": 0.46,
         "y": 0.55,
         "width": 0.1,
-        "character": "E"
+        "character": "D"
     },
     {
         "color": "#ff2cb4",
@@ -168,45 +168,80 @@
         "character": " "
     },
     {
-        "color": "#ff2cb4",
+        "color": "blue",
         "x": 0.1,
         "y": 0.7,
         "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.22,
-        "y": 0.7,
-        "width": 0.1,
-        "character": " "
+        "character": "S"
     },
     {
         "color": "purple",
+        "x": 0.22,
+        "y": 0.7,
+        "width": 0.1,
+        "character": "A"
+    },
+    {
+        "color": "red",
         "x": 0.34,
+        "y": 0.7,
+        "width": 0.1,
+        "character": "N"
+    },
+    {
+        "color": "orange",
+        "x": 0.46,
         "y": 0.7,
         "width": 0.1,
         "character": "D"
     },
     {
-        "color": "red",
-        "x": 0.46,
+        "color": "#ff2cb4",
+        "x": 0.58,
         "y": 0.7,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.7,
+        "y": 0.7,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "yellow",
+        "x": 0.1,
+        "y": 0.85,
         "width": 0.1,
         "character": "A"
     },
     {
-        "color": "orange",
-        "x": 0.58,
-        "y": 0.7,
+        "color": "green",
+        "x": 0.22,
+        "y": 0.85,
         "width": 0.1,
-        "character": "R"
+        "character": "G"
     },
     {
-        "color": "yellow",
-        "x": 0.7,
-        "y": 0.7,
+        "color": "blue",
+        "x": 0.34,
+        "y": 0.85,
         "width": 0.1,
-        "character": "K"
+        "character": "A"
+    },
+    {
+        "color": "purple",
+        "x": 0.46,
+        "y": 0.85,
+        "width": 0.1,
+        "character": "I"
+    },
+    {
+        "color": "red",
+        "x": 0.58,
+        "y": 0.85,
+        "width": 0.1,
+        "character": "N"
     }
 ]

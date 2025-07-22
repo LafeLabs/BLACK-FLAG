@@ -44,6 +44,9 @@
     #flagtable input{
         width:2em;
     }
+    #flagprogramtable input{
+        width:4em;
+    }
     .scrollbutton{
         border:solid;
         display:block;
@@ -80,6 +83,7 @@ JSON:    <textarea id = "jsonio"></textarea>
     <div class = "scrollbutton" id = "importbutton">IMPORT JSON</div>
 
     <input id = "textinput">
+    <table id ="flagprogramtable"></table>
     <table id ="flagtable"></table>
 </div>
 
@@ -100,9 +104,21 @@ rainbow = [
     "purple"
 ];
 
+flagprogram = {
+    "left":0.2,
+    "top":0.2,
+    "number_of_columns":6,
+    "gap_width":0.025,
+    "gap_height":0.05
+}
+
 document.getElementById("rainbowbutton").onclick = function(){
+    cycleindex = 0;
     for(var index = 0;index < flag.length;index++){
-        flag[index].color = rainbow[index%6];
+        if(flag[index].character != " "){
+            flag[index].color = rainbow[cycleindex%6];
+            cycleindex++;
+        }
     }
     drawflag();
     loadtable();
@@ -155,6 +171,52 @@ httpc.onreadystatechange = function() {
 };
 httpc.open("GET", "load-file.php?filename=flag.txt", true);
 httpc.send();
+
+
+var httpc3 = new XMLHttpRequest();
+httpc3.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        flagprogram = JSON.parse(this.responseText);    
+        for(var attribute in flagprogram){
+            console.log(attribute);
+            var newtr = document.createElement("TR");
+            var newtd = document.createElement("TD");
+            newtd.innerHTML = attribute;
+            newtr.appendChild(newtd);
+            document.getElementById("flagprogramtable").appendChild(newtr);
+            var newtd = document.createElement("TD");
+            newtr.appendChild(newtd);
+            var newinput = document.createElement("INPUT");
+            newtd.appendChild(newinput);
+            newinput.value = flagprogram[attribute];
+            newinput.className = attribute;
+            newinput.onchange = function(){
+                var thisattribute = this.className;
+                console.log(thisattribute);
+                flagprogram[thisattribute] = parseFloat(this.value);
+                saveflagprogram();
+                flagtext = document.getElementById("textinput").value;
+                flag = [];
+                for(var index = 0;index < flagtext.length;index++){
+                    var letter = {};
+                    letter.color = "#ff2cb4";
+                    letter.x = flagprogram.left + 0.1*(index%flagprogram.number_of_columns) + flagprogram.gap_width*(index%flagprogram.number_of_columns);
+                    letter.y = flagprogram.top + Math.floor(index/6)*0.1 + flagprogram.gap_height*Math.floor(index/6);
+                    letter.width = 0.1;
+                    letter.character = flagtext.charAt(index);
+                    flag.push(letter);
+                }
+                drawflag();
+                loadtable();
+            
+
+                
+            }
+        }
+    }
+};
+httpc3.open("GET", "load-file.php?filename=flag-program.txt", true);
+httpc3.send();
 
 
 function setup(){
@@ -238,13 +300,12 @@ document.getElementById("textinput").onchange = function(){
     for(var index = 0;index < flagtext.length;index++){
         var letter = {};
         letter.color = "#ff2cb4";
-        letter.x = 0.1 + 0.125*(index%6);
-        letter.y = 0.2 + Math.floor(index/6)*0.125;
+        letter.x = flagprogram.left + 0.1*(index%flagprogram.number_of_columns) + flagprogram.gap_width*(index%flagprogram.number_of_columns);
+        letter.y = flagprogram.top + Math.floor(index/6)*0.1 + flagprogram.gap_height*Math.floor(index/6);
         letter.width = 0.1;
         letter.character = flagtext.charAt(index);
         flag.push(letter);
     }
-
     drawflag();
     loadtable();
     
@@ -254,8 +315,10 @@ function drawflag(){
     background(0);
     strokeWeight(1);
     
+    var flagstring = "";
     for(var index = 0;index < flag.length;index++){
         var glyph = ascii[flag[index].character.charCodeAt(0)];
+        flagstring += flag[index].character;
         fill(flag[index].color);
         stroke(flag[index].color);
         blocksize = unit*flag[index].width;
@@ -265,6 +328,7 @@ function drawflag(){
         }
         endShape(CLOSE);
     }
+    document.getElementById("textinput").value = flagstring;
     strokeWeight(6);
     stroke("#ff2cb4");
     noFill();
@@ -363,6 +427,16 @@ function saveflag(){
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag.txt");//send text to save-file.php
+}
+
+
+function saveflagprogram(){
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(JSON.stringify(flagprogram,null,"    "))+"&filename=flag-program.txt");//send text to save-file.php
+
+    
 }
 
 </script>
