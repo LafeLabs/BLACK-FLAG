@@ -54,7 +54,7 @@ httpcUpload.send();
 
 function loadimagefeed(){
 
-    for(var index = 0;index < uploadImages.length;index++) {
+    for(var index = uploadImages.length - 1;index >= 0;index--) {
         if(uploadImages[index].includes(".png") || uploadImages[index].includes(".PNG") || uploadImages[index].includes(".jpg") || uploadImages[index].includes(".JPG") ||uploadImages[index].includes(".jpeg") || uploadImages[index].includes(".gif") ||uploadImages[index].includes(".GIF")){
             
             var newuploadbox = document.createElement("DIV");

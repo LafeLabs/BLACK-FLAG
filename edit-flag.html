@@ -125,8 +125,11 @@ document.getElementById("rainbowbutton").onclick = function(){
 }
 
 document.getElementById("postbutton").onclick = function(){
-    png64 = document.getElementById("defaultCanvas0").toDataURL("image/png");
+    
     var timestamp = Math.round((new Date().getTime())/1000).toString();
+
+/*
+    png64 = document.getElementById("defaultCanvas0").toDataURL("image/png");
     var httpc = new XMLHttpRequest();
     var url = "save-png.php";        
     httpc.open("POST", url, true);
@@ -134,12 +137,43 @@ document.getElementById("postbutton").onclick = function(){
     httpc.send("data="+encodeURIComponent(png64.substring(22))+"&filename=flag"  + timestamp + ".png");//send text to filesaver.php
      //location.reload(); 
      
-
     var httpc = new XMLHttpRequest();
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag" + timestamp + ".txt");//send text to save-file.php     
+*/
 
+    var flagsvgstring = "<svg width=\"" + unit.toString() + "\" height=\"" + unit.toString() + "\" viewbox = \"0 0 " + unit.toString() + " " + unit.toString() + "\"  xmlns=\"http://www.w3.org/2000/svg\">\n";
+    
+    flagsvgstring += "\n<!--<json>" + JSON.stringify(flag,null,"    ") + "</json>-->\n";
+    
+    flagsvgstring += "<path d = \"M 0 0 L" + unit.toString() + " 0 L" + unit.toString() + " " + unit.toString() +" L0 " + unit.toString() + " L0 0 Z\" stroke = \"black\" stroke-width = \"1\" fill = \"black\" />";
+    
+
+    for(var index = 0;index < flag.length;index++){
+        var glyph = ascii[flag[index].character.charCodeAt(0)];
+        blocksize = unit*flag[index].width;
+        
+        if(glyph.length > 0){
+            flagsvgstring += "\n<path d = \"M" + (flag[index].x*unit - 0.5*blocksize + glyph[0].x*blocksize).toString() + " " + (flag[index].y*unit - 0.5*blocksize + glyph[0].y*blocksize).toString();
+            
+            
+            for(var gindex = 1;gindex < glyph.length;gindex++){
+                    
+                flagsvgstring += "L " + (flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize).toString() + " " + (flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize).toString() + " ";
+                
+            }
+            flagsvgstring += "Z\" stroke = \"" + flag[index].color + "\" stroke-width = \"1\" fill = \"" + flag[index].color + "\" />";            
+        }
+
+
+    }
+    flagsvgstring += "</svg>";
+    
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data=" + encodeURIComponent(flagsvgstring)+"&filename=flag" + timestamp + ".svg");//send text to save-file.php     
 
 }
 
@@ -201,11 +235,20 @@ httpc3.onreadystatechange = function() {
                     var letter = {};
                     letter.color = "#ff2cb4";
                     letter.x = flagprogram.left + 0.1*(index%flagprogram.number_of_columns) + flagprogram.gap_width*(index%flagprogram.number_of_columns);
-                    letter.y = flagprogram.top + Math.floor(index/6)*0.1 + flagprogram.gap_height*Math.floor(index/6);
+                    letter.y = flagprogram.top + Math.floor(index/flagprogram.number_of_columns)*0.1 + flagprogram.gap_height*Math.floor(index/flagprogram.number_of_columns);
                     letter.width = 0.1;
                     letter.character = flagtext.charAt(index);
                     flag.push(letter);
                 }
+                
+                cycleindex = 0;
+                for(var index = 0;index < flag.length;index++){
+                    if(flag[index].character != " "){
+                        flag[index].color = rainbow[cycleindex%6];
+                        cycleindex++;
+                    }
+                }
+
                 drawflag();
                 loadtable();
             
@@ -301,11 +344,20 @@ document.getElementById("textinput").onchange = function(){
         var letter = {};
         letter.color = "#ff2cb4";
         letter.x = flagprogram.left + 0.1*(index%flagprogram.number_of_columns) + flagprogram.gap_width*(index%flagprogram.number_of_columns);
-        letter.y = flagprogram.top + Math.floor(index/6)*0.1 + flagprogram.gap_height*Math.floor(index/6);
+        letter.y = flagprogram.top + Math.floor(index/flagprogram.number_of_columns)*0.1 + flagprogram.gap_height*Math.floor(index/flagprogram.number_of_columns);
         letter.width = 0.1;
         letter.character = flagtext.charAt(index);
         flag.push(letter);
     }
+    
+    cycleindex = 0;
+    for(var index = 0;index < flag.length;index++){
+        if(flag[index].character != " "){
+            flag[index].color = rainbow[cycleindex%6];
+            cycleindex++;
+        }
+    }
+
     drawflag();
     loadtable();
     
