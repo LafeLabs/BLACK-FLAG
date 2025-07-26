@@ -79,7 +79,6 @@ function loadimagefeed(){
                 newspan.onclick = function(){
                     var imageurl =this.parentElement.getElementsByClassName("uploadimage")[0].src; 
                     imagefilename = imageurl.split("/")[imageurl.split("/").length-1];
-                    console.log("imagefilename");
                     var httpc = new XMLHttpRequest();
                     var url = "delete-file.php";         
                     httpc.open("POST", url, true);
@@ -180,7 +179,7 @@ h1{
     font-size:2em;
 }
 </style>
-    </body>
-    </html>
+</body>
+</html>
     
     

@@ -14,6 +14,9 @@ FLY THE BLACK FLAG DOWN BY THE HIGIHWAY!
 </head>
 <body> 
 <style>
+body{
+    FONT-FAMILY: COMIC SANS MS;
+}
 #highway{
     position:absolute;
     background-color:#807E78;
@@ -27,6 +30,7 @@ FLY THE BLACK FLAG DOWN BY THE HIGIHWAY!
     margin:auto;
     display:block;
     font-family:Comic Sans MS;
+    font-size:2em;
     border:solid;
     border-radius:0.5em;
     border-width:0.5em;
@@ -34,6 +38,9 @@ FLY THE BLACK FLAG DOWN BY THE HIGIHWAY!
     margin-top:1em;
     margin-bottom:0.5em;
     overflow-x:scroll;
+}
+#highway h1{
+    text-align:center;
 }
 #highway img{
     display:block;
@@ -76,26 +83,117 @@ main{
     border-color:#9f8767;
     border-width:50px;
     display:block;
-    margin:auto;
+    margin-left:auto;
+    margin-top:1em;
+    margin-bottom:5em;
 }    
+#buttontable{
+    position:absolute;
+    left:0px;
+    bottom:0px;
+}
+.filelabel{
+    display:none;   
+}
+.deletebutton{
+    border:solid;
+    border-color:red;
+    color:red;
+}
+.button{
+    cursor:pointer;
+}
+.button:hover{
+    background-color:yellow;
+}
+.button:active{
+    background-color:green;
+}
+.imagebox{
+    border-top:solid;
+    border-width:10px;
+    border-color:white;
+    padding-bottom:1em;
+    padding-top:1em;
+    padding-left:1em;
+    border-top-style: dashed;
+}
+#buttontable{
+    width:100%;
+}
+#buttontable td{
+    border:solid;
+    border-radius:5px;
+    text-align:center;
+    width:20%;
+    font-size:1em;
+}
+input{
+    BACKGROUND-COLOR:#9f8767;
+    FONT-FAMILY: COMIC SANS MS;
+}
 </style>
 <div id = "tunnel">
     <input class = "CARDBOARD" id = "textinput">
+    <table id = "buttontable">
+        <tr>
+            <td class = "button">SKETCH CARDBOARD SIGN</td>
+            <td class = "button">WRITE CARDBOARD SIGN</td>
+            <td class = "button">POST</td>
+        </tr>
+    </table>
 </div>
 <div id = "highway">
     <div id = "qrcode"></div>
     <textarea id = "wall" class = "CARDBOARD"></textarea>
+    <TABLE id = "flag-geometry-table">
+        <TR>
+            <TD>LEFT:</TD>
+            <TD>
+                <INPUT ID= "geometry_left_input">
+            </TD>
+        </TR>
+        <TR>
+            <TD>TOP:</TD>
+            <TD>
+                <INPUT ID= "geometry_top_input">
+            </TD>
+        </TR>
+        <TR>
+            <TD>NUMBER OF COLUMNS:</TD>
+            <TD>
+                <INPUT ID= "geometry_number_of_columns_input">
+            </TD>
+        </TR>
+        <TR>
+            <TD>HORIZONTAL GAP:</TD>
+            <TD>
+                <INPUT ID= "geometry_horizontal_gap_input">
+            </TD>
+        </TR>
+        <TR>
+            <TD>VERTICAL GAP:</TD>
+            <TD>
+                <INPUT ID= "geometry_vertical_gap_input">
+            </TD>
+        </TR>
+    </TABLE>
+    <div id = "flag-feed"></div>
     <div id = "image-feed"></div>
-    <A HREF = "../">../</A>
-    <a href = "edit-html.html">edit-html.html</a>
-    <a href = "edit-index.html">edit-index.html</a> 
-    <a href = "edit-ascii.html">edit-ascii.html</a>
-    <a href = "edit-flag.html">edit-flag.html</a>
-    <a href = "readme.html">readme.html</a>
-    <a href = "qrcode.html">qrcode.html</a>
-    <a href = "image-feed.html">image-feed.html</a>
-    <a href = "flag.txt">flag.txt</a>
-    <a href = "ascii.txt">ascii.txt</a>
+    
+    <form id = "uploadform" action="upload-image.php" method="post" enctype="multipart/form-data">
+                <span id ="uploadspan">UPLOAD:</span>
+        <input type="file" name="fileToUpload" id="fileToUpload">
+        <input type="submit" value="Upload Image" name="submit" id ="submitinput">
+    </form>
+    <H1>LINK LIST</H1>
+    <div id = "link-list">
+        <a href = "edit-font.html">EDIT FONT</a>
+        <a href = "edit-index.html">EDIT INDEX</a> 
+        <a href = "edit-html.html">EDIT CODE SET</a>
+        <a href = "readme.html">README</a>
+        <a href = "qrcode.html">QR CODE</a>
+    </div>
     <table id ="flagtable"></table>
 </div>
 <script>
@@ -144,7 +242,7 @@ httpc.onreadystatechange = function() {
                 drawflag();
             }
         };
-        httpc2.open("GET", "load-file.php?filename=ascii.txt", true);
+        httpc2.open("GET", "load-file.php?filename=font.txt", true);
         httpc2.send();
 
     }
@@ -174,8 +272,7 @@ function drawflag(){
     strokeWeight(6);
     stroke("#ff2cb4");
     noFill();
-//    rect(flag[letterindex].x*unit - 0.5*flag[letterindex].width*unit,flag[letterindex].y*unit - 0.5*flag[letterindex].width*unit,flag[letterindex].width*unit,flag[letterindex].width*unit);
-    
+
 //    saveflag();
 }
 
@@ -226,9 +323,26 @@ httpcUpload.onreadystatechange = function() {
 httpcUpload.open("GET", "list-files.php", true);
 httpcUpload.send();
 
+geometry = {};
+
+var httpcgeometry = new XMLHttpRequest();
+httpcgeometry.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        geometry = JSON.parse(this.responseText);
+        document.getElementById("geometry_left_input").value = geometry.left.toString();   
+        document.getElementById("geometry_top_input").value = geometry.top.toString();   
+        document.getElementById("geometry_number_of_columns_input").value = geometry.number_of_columns.toString();   
+        document.getElementById("geometry_horizontal_gap_input").value = geometry.horizontal_gap.toString();   
+        document.getElementById("geometry_vertical_gap_input").value = geometry.vertical_gap.toString();   
+    }
+};
+httpcgeometry.open("GET", "load-file.php?filename=geometry.txt", true);
+httpcgeometry.send();
+
 function loadimagefeed(){
 
     for(var index = uploadImages.length - 1;index >= 0;index--) {
+        
         if(uploadImages[index].includes(".SVG") || uploadImages[index].includes(".svg") || uploadImages[index].includes(".png") || uploadImages[index].includes(".PNG") || uploadImages[index].includes(".jpg") || uploadImages[index].includes(".JPG") ||uploadImages[index].includes(".jpeg") || uploadImages[index].includes(".gif") ||uploadImages[index].includes(".GIF")){
             
             var newuploadbox = document.createElement("DIV");
@@ -236,14 +350,39 @@ function loadimagefeed(){
             var newimg = document.createElement("IMG");
             newimg.src = uploadImages[index];
             newimg.classList.add("uploadimage");
+            if(uploadImages[index].substring(0,4) == "flag"){
+                newimg.onclick = function(){
+                    var imageurl =this.parentElement.getElementsByClassName("uploadimage")[0].src; 
+                    imagefilename = imageurl.split("/")[imageurl.split("/").length-1];
+
+                    var httpc = new XMLHttpRequest();
+                    httpc.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var svgraw = this.responseText;
+                            jsonraw = svgraw.split("<json>")[1].split("</json>")[0];
+                            flag = JSON.parse(jsonraw);
+                            drawflag();
+                        }
+                    };
+                    httpc.open("GET", "load-file.php?filename=" + imagefilename, true);
+                    httpc.send();
+
+
+                }
+            }
             newuploadbox.appendChild(newimg);
-            document.getElementById("image-feed").appendChild(newuploadbox);
+            if(uploadImages[index].substring(0,4) == "flag"){
+                document.getElementById("flag-feed").appendChild(newuploadbox);
+            }
+            else{
+                document.getElementById("image-feed").appendChild(newuploadbox);
+            }
     
             var newdiv = document.createElement("DIV");
             newdiv.innerHTML = uploadImages[index];
             newdiv.className = "filelabel";
             newuploadbox.appendChild(newdiv);
-        
+            
             if(deletemode){
                 var newspan = document.createElement("SPAN");
                 newspan.innerHTML = "DELETE";
@@ -268,6 +407,14 @@ function loadimagefeed(){
     }    
 }
 
+function saveflag(){
+    document.getElementById("jsonio").value = JSON.stringify(flag,null,"    ");
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag.txt");//send text to save-file.php
+}
+
 function setup(){
 
 }
@@ -280,6 +427,181 @@ function draw() {
 function mouseClicked() {   
 
     
+}
+
+rainbow(document.getElementById("link-list").getElementsByTagName("A"));
+titles = document.getElementsByTagName("H1");
+for(var index = 0;index < titles.length;index++){
+    rainbowstring(titles[index]);    
+}
+
+function colorwheel(angle){
+    H = angle;
+    z = 255*(1 - Math.abs((H/60)%2 - 1));
+    if(H < 60){
+        redval = 255;
+        greenval = Math.round(z);
+        blueval = 0;
+    }
+    if(H >= 60 && H < 120){
+        redval = Math.round(z);
+        greenval = 255;
+        blueval = 0;
+    }
+    if(H >= 120 && H < 180){
+        redval = 0;
+        greenval = 255;
+        blueval = Math.round(z);
+    }
+    if(H >= 180 && H < 240){
+        redval = 0;    
+        greenval = Math.round(z);
+        blueval = 255;
+    }
+    if(H >= 240 && H < 300){
+        redval = Math.round(z);    
+        greenval = 0;
+        blueval = 255;
+    }
+    if(H >= 300 && H < 360){
+        redval = 255;    
+        greenval = 0;
+        blueval = Math.round(z);
+    }
+    
+    redstring = redval.toString(16);
+    if(redstring.length < 2){
+        redstring = "0" + redstring;    
+    }
+    greenstring = greenval.toString(16);
+    if(greenstring.length < 2){
+        greenstring = "0" + greenstring; 
+    }
+    bluestring = blueval.toString(16);
+    if(bluestring.length < 2){
+        bluestring = "0" + bluestring; 
+    }
+    color = "#" + redstring + greenstring + bluestring;   
+    return(color);
+}
+
+function rainbowstring(localelement){
+    text = localelement.innerHTML;
+    localelement.innerHTML = "";
+    n = text.length;
+    for(var index = 0; index < n; index++){
+        var newspan = document.createElement("SPAN");    
+        newspan.innerHTML = text.charAt(index);
+    
+        H = index*360/n;
+        z = 255*(1 - Math.abs((H/60)%2 - 1));
+    
+        if(H < 60){
+            redval = 255;
+            greenval = Math.round(z);
+            blueval = 0;
+        }
+        if(H >= 60 && H < 120){
+            redval = Math.round(z);
+            greenval = 255;
+            blueval = 0;
+        }
+        if(H >= 120 && H < 180){
+            redval = 0;
+            greenval = 255;
+            blueval = Math.round(z);
+        }
+        if(H >= 180 && H < 240){
+            redval = 0;    
+            greenval = Math.round(z);
+            blueval = 255;
+        }
+        if(H >= 240 && H < 300){
+            redval = Math.round(z);    
+            greenval = 0;
+            blueval = 255;
+        }
+        if(H >= 300 && H < 360){
+            redval = 255;    
+            greenval = 0;
+            blueval = Math.round(z);
+        }
+        
+        redstring = redval.toString(16);
+        if(redstring.length < 2){
+            redstring = "0" + redstring;    
+        }
+        greenstring = greenval.toString(16);
+        if(greenstring.length < 2){
+            greenstring = "0" + greenstring; 
+        }
+        bluestring = blueval.toString(16);
+        if(bluestring.length < 2){
+            bluestring = "0" + bluestring; 
+        }
+        color = "#" + redstring + greenstring + bluestring;   
+        newspan.style.color = color;
+        localelement.appendChild(newspan);
+    }
+    
+
+}
+function rainbow(localarray){
+    n = localarray.length;
+    theta = 0;
+    for(var index = 0;index < n;index++){
+    
+        H = index*360/n;
+        z = 255*(1 - Math.abs((H/60)%2 - 1));
+    
+        if(H < 60){
+            redval = 255;
+            greenval = Math.round(z);
+            blueval = 0;
+        }
+        if(H >= 60 && H < 120){
+            redval = Math.round(z);
+            greenval = 255;
+            blueval = 0;
+        }
+        if(H >= 120 && H < 180){
+            redval = 0;
+            greenval = 255;
+            blueval = Math.round(z);
+        }
+        if(H >= 180 && H < 240){
+            redval = 0;    
+            greenval = Math.round(z);
+            blueval = 255;
+        }
+        if(H >= 240 && H < 300){
+            redval = Math.round(z);    
+            greenval = 0;
+            blueval = 255;
+        }
+        if(H >= 300 && H < 360){
+            redval = 255;    
+            greenval = 0;
+            blueval = Math.round(z);
+        }
+        
+        redstring = redval.toString(16);
+        if(redstring.length < 2){
+            redstring = "0" + redstring;    
+        }
+        greenstring = greenval.toString(16);
+        if(greenstring.length < 2){
+            greenstring = "0" + greenstring; 
+        }
+        bluestring = blueval.toString(16);
+        if(bluestring.length < 2){
+            bluestring = "0" + bluestring; 
+        }
+        color = "#" + redstring + greenstring + bluestring;
+        //console.log(color);
+        localarray[index].style.backgroundColor = color;// + "80";
+        localarray[index].style.borderColor = color;
+    }
 }
 </script>
 </body>
