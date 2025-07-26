@@ -2,51 +2,90 @@
 <html lang="en">
 <head>
    <meta charset="utf-8">
-<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAZ4efAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEREREREREAEAAAAAAAAQAQEREREREBABAREREREQEAEBERERERAQAQEREREREBABAREREREQEAEBERERERAQAQEREREREBABAREREREQEAEBERERERAQAQEREREREBABAAAAAAAAEAEREREREREQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rel="icon" type="image/x-icon">
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAw8OYAprbEAHh4gAADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiAAIiAAIiIiIiIiIiIiIiIiIiIiIiERERERERERERETMzMzMRERERMzMzMxEREREzMzMzERERETMzMzMRERERMzMzMxEREREzMzMzERERETMzMzMRERERMzMzMxEREREzMzMzEREREREREREREREREREREREREREREREREREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rel="icon" type="image/x-icon">
             <!--Stop Google:-->
     <META NAME="robots" CONTENT="noindex,nofollow">
-
-   <title>FLAG!</title>    
+   <title>FLY THE BLACK FLAG!</title>    
    <!--
-
+FLY THE BLACK FLAG DOWN BY THE HIGIHWAY!
    -->
 <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body> 
 <style>
-    body{
-        background-color:#9f8767;
-        font-family:Comic Sans MS;
-        font-size:2em;
-    }
-    input{
-        background-color:black;
-        font-family:Courier;
-        color:#00ff00;
-        font-size:1em;
-    }
-    a{
-        display:block;
-        color:blue;
-    }
-    main{
-        position:absolute;
-        left:25px;
-        top:25px;
-    }
-    #scroll{
-        position:absolute;
-        right:0px;
-        top:0px;
-        bottom:0px;
-        overflow:scroll;
-        padding-left:2em;
-    }
-    #flagtable input{
-        width:2em;
-    }
+#highway{
+    position:absolute;
+    background-color:#807E78;
+    right:0px;
+    bottom:0px;
+    overflow:scroll;
+}
+#highway a{
+    text-align:center;
+    width:80%;
+    margin:auto;
+    display:block;
+    font-family:Comic Sans MS;
+    border:solid;
+    border-radius:0.5em;
+    border-width:0.5em;
+    color:black;
+    margin-top:1em;
+    margin-bottom:0.5em;
+    overflow-x:scroll;
+}
+#highway img{
+    display:block;
+    max-width:80%;
+    margin:auto;
+}
+#tunnel{
+    position:absolute;
+    background-color:#CCC9C0;
+    left:0px;
+    top:0px;
+    overflow:hidden;
+}
+main{
+    position:absolute;
+    left:50px;
+    top:50px;
+}
+#textinput{
+    font-size:1em;
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:40em;
+}
+#wall{
+     width:90%;
+     margin-left:4.5%;
+     border:solid;
+     height:8em;
+     font-size:1em;
+}
+.CARDBOARD{
+    FONT-FAMILY: COMIC SANS MS;
+    FONT-SIZE:3EM;
+    BACKGROUND-COLOR:#9f8767;
+}
+#qrcode img{
+    border:solid;
+    border-color:#9f8767;
+    border-width:50px;
+    display:block;
+    margin:auto;
+}    
 </style>
-<div id = "scroll">
+<div id = "tunnel">
+    <input class = "CARDBOARD" id = "textinput">
+</div>
+<div id = "highway">
+    <div id = "qrcode"></div>
+    <textarea id = "wall" class = "CARDBOARD"></textarea>
+    <div id = "image-feed"></div>
     <A HREF = "../">../</A>
     <a href = "edit-html.html">edit-html.html</a>
     <a href = "edit-index.html">edit-index.html</a> 
@@ -59,21 +98,49 @@
     <a href = "ascii.txt">ascii.txt</a>
     <table id ="flagtable"></table>
 </div>
-
 <script>
-    
+
 unit = 100;
 flag = [];
 ascii = [];
+
+if(innerWidth > innerHeight){
+    
+    unit = innerHeight - 100;
+    document.getElementById("tunnel").style.right = (innerWidth - innerHeight).toString() + "px";
+    document.getElementById("tunnel").style.bottom = "0px";
+    
+    document.getElementById("highway").style.left = innerHeight.toString() + "px";
+    document.getElementById("highway").style.top = "0px";
+    
+}
+else{
+    unit = innerWidth - 100;
+    document.getElementById("tunnel").style.bottom = (innerHeight - innerWidth).toString() + "px";
+    document.getElementById("tunnel").style.right = "0px";
+    
+    document.getElementById("highway").style.left = "0px";
+    document.getElementById("highway").style.top = innerWidth.toString() + "px";
+}
+
 var httpc = new XMLHttpRequest();
 httpc.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         flag = JSON.parse(this.responseText);    
-        
         var httpc2 = new XMLHttpRequest();
         httpc2.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 ascii = JSON.parse(this.responseText);
+                if(innerWidth > innerHeight){
+                    unit = innerHeight - 100;
+                }
+                else{
+                    unit = innerWidth - 100;
+                }
+                createCanvas(unit, unit);
+                background(0);
+                stroke(0);
+                strokeWeight(0.1);
                 drawflag();
             }
         };
@@ -86,20 +153,122 @@ httpc.open("GET", "load-file.php?filename=flag.txt", true);
 httpc.send();
 
 
-function setup(){
-    if(innerWidth > innerHeight){
-        unit = innerHeight - 50;
-        document.getElementById("scroll").style.left  = unit.toString() + "px";
-    }
-    else{
-        unit = innerWidth - 50;
-    }
-    createCanvas(unit, unit);
+function drawflag(){
     background(0);
-    stroke(0);
     strokeWeight(1);
-    stroke("red");
-    fill("red");
+    
+    var flagstring = "";
+    for(var index = 0;index < flag.length;index++){
+        var glyph = ascii[flag[index].character.charCodeAt(0)];
+        flagstring += flag[index].character;
+        fill(flag[index].color);
+        stroke(flag[index].color);
+        blocksize = unit*flag[index].width;
+        beginShape();
+        for(var gindex = 0;gindex < glyph.length;gindex++){
+            vertex(flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize,flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize);
+        }
+        endShape(CLOSE);
+    }
+    document.getElementById("textinput").value = flagstring;
+    strokeWeight(6);
+    stroke("#ff2cb4");
+    noFill();
+//    rect(flag[letterindex].x*unit - 0.5*flag[letterindex].width*unit,flag[letterindex].y*unit - 0.5*flag[letterindex].width*unit,flag[letterindex].width*unit,flag[letterindex].width*unit);
+    
+//    saveflag();
+}
+
+
+
+wall = "";
+var httpc = new XMLHttpRequest();
+httpc.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        wall = this.responseText;
+        document.getElementById("wall").value = wall;  
+    }
+};
+httpc.open("GET", "load-file.php?filename=wall.txt", true);
+httpc.send();
+
+document.getElementById("wall").onkeyup = function() {
+    data = encodeURIComponent(this.value);
+    var httpc = new XMLHttpRequest();
+    var url = "save-file.php";        
+    httpc.open("POST", url, true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+    httpc.send("data="+data+"&filename=wall.txt");//send text to filesaver.php
+}
+
+codesquaresize = 400;
+qrcode = new QRCode(document.getElementById("qrcode"), {
+	text: window.location.href,
+	width: codesquaresize,
+	height: codesquaresize,
+	colorDark : "#000000",
+	colorLight : "#ffffff",
+	correctLevel : QRCode.CorrectLevel.H
+});
+
+deletemode = true;
+//deletemode = false;
+
+uploadImages = [];
+
+var httpcUpload = new XMLHttpRequest();
+httpcUpload.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        uploadImages = JSON.parse(this.responseText);
+        loadimagefeed();
+    }
+};
+httpcUpload.open("GET", "list-files.php", true);
+httpcUpload.send();
+
+function loadimagefeed(){
+
+    for(var index = uploadImages.length - 1;index >= 0;index--) {
+        if(uploadImages[index].includes(".SVG") || uploadImages[index].includes(".svg") || uploadImages[index].includes(".png") || uploadImages[index].includes(".PNG") || uploadImages[index].includes(".jpg") || uploadImages[index].includes(".JPG") ||uploadImages[index].includes(".jpeg") || uploadImages[index].includes(".gif") ||uploadImages[index].includes(".GIF")){
+            
+            var newuploadbox = document.createElement("DIV");
+            newuploadbox.classList.add("imagebox");
+            var newimg = document.createElement("IMG");
+            newimg.src = uploadImages[index];
+            newimg.classList.add("uploadimage");
+            newuploadbox.appendChild(newimg);
+            document.getElementById("image-feed").appendChild(newuploadbox);
+    
+            var newdiv = document.createElement("DIV");
+            newdiv.innerHTML = uploadImages[index];
+            newdiv.className = "filelabel";
+            newuploadbox.appendChild(newdiv);
+        
+            if(deletemode){
+                var newspan = document.createElement("SPAN");
+                newspan.innerHTML = "DELETE";
+                newuploadbox.appendChild(newspan);
+                newspan.classList.add("button");
+                newspan.classList.add("deletebutton");
+                newspan.onclick = function(){
+                    var imageurl =this.parentElement.getElementsByClassName("uploadimage")[0].src; 
+                    imagefilename = imageurl.split("/")[imageurl.split("/").length-1];
+                    console.log("imagefilename");
+                    var httpc = new XMLHttpRequest();
+                    var url = "delete-file.php";         
+                    httpc.open("POST", url, true);
+                    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+                    httpc.send("filename=" + imagefilename);//send text to deletefile.php
+                    this.parentElement.parentElement.removeChild(this.parentElement);
+                }   
+            }   
+            
+            
+        }
+    }    
+}
+
+function setup(){
 
 }
 
@@ -112,39 +281,6 @@ function mouseClicked() {
 
     
 }
-
-
-function keyPressed() {
-  if (keyCode  === DELETE) {
-
-  }
-
-  if(key == ' '){
-
-  }
-  if(keyCode === RETURN){
-
-  }
-}
-
-
-
-function drawflag(){
-    background(0);
-    for(var index = 0;index < flag.length;index++){
-        var glyph = ascii[flag[index].character.charCodeAt(0)];
-        fill(flag[index].color);
-        stroke(flag[index].color);
-        blocksize = unit*flag[index].width;
-        beginShape();
-        for(var gindex = 0;gindex < glyph.length;gindex++){
-            vertex(flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize,flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize);
-        }
-        endShape(CLOSE);
-    }
-}
-
-
 </script>
 </body>
 </html>
