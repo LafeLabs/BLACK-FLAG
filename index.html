@@ -25,7 +25,7 @@ body{
     bottom:0px;
     overflow:scroll;
 }
-#highway a{
+#link-list a{
     text-align:center;
     width:80%;
     margin:auto;
@@ -140,6 +140,33 @@ input{
 #rainbowbutton{
     border:solid;
 }
+.link-delete-button{
+    border:solid;
+    border-radius:5px;
+    border-color:red;
+    color:red;
+    text-align:center;
+    width:40%;
+    font-size:0.7em;
+}
+.CARDBOARD-SIGN A{
+    COLOR:BLUE;
+}
+.CARDBOARD-SIGN{
+    MAX-WIDTH:90%;   
+    MARGIN:AUTO;
+    MARGIN-TOP:1EM;
+    MARGIN-BOTTOM:1EM;
+}
+.CARDBOARD-SIGN TEXTAREA{
+    MAX-WIDTH:100%;
+    FONT-SIZE:1EM;
+    HEIGHT:10EM;
+    DISPLAY:NONE;
+}
+.timestampdata{
+    display:none;
+}
 </style>
 <div id = "tunnel">
     <input class = "CARDBOARD" id = "textinput">
@@ -150,7 +177,9 @@ input{
     </table>
 </div>
 <div id = "highway">
+        
     <div id = "qrcode"></div>
+    
     <h1>TRASH MAGIC WALL:</h1>
     <textarea id = "wall" class = "CARDBOARD"></textarea>
     <H1>FLAG GEOMETRY CONTROLS:</H1>
@@ -199,7 +228,6 @@ input{
         <input type="submit" value="Upload Image" name="submit" id ="submitinput">
     </form>
     <div id = "image-feed"></div>
-    
     <h1>LINK FEED</h1>
     <table>
         <tr>
@@ -209,7 +237,8 @@ input{
             </TD>
         </tr>
     </table>
-    <div id = "link-feed"></div>
+    <div id = "cardboard_sign_feed"></div>
+
     <H1>LINK LIST</H1>
     <div id = "link-list">
         <a href = "edit-font.html">EDIT FONT</a>
@@ -517,12 +546,85 @@ function savemetaflag(){
     httpc.send("data="+encodeURIComponent(JSON.stringify(metaflag,null,"    "))+"&filename=metaflag.txt");//send text to save-file.php
 }
 
+document.getElementById("newlinkinput").value = "";
+document.getElementById("newlinkinput").onchange = function(){
+    var newlink = {};
+    newlink.url = this.value;
+    newlink.text = "";
+    newlink.timestamp = Math.round((new Date().getTime())/1000);
+    
+    links.push(newlink);
+    drawlinkfeed();
+    savelinks();
+}
+
+function drawlinkfeed(){
+    document.getElementById("cardboard_sign_feed").innerHTML = "";
+    for(var index = links.length - 1;index >= 0;index--){
+        var new_cardboard_sign = document.createElement("DIV");
+        new_cardboard_sign.classList.add("CARDBOARD");
+        new_cardboard_sign.classList.add("CARDBOARD-SIGN");
+        document.getElementById("cardboard_sign_feed").appendChild(new_cardboard_sign);
+        var new_qrcode = document.createElement("SPAN");
+        
+        qrcode = new QRCode(new_qrcode, {
+        	text: links[index].url,
+        	width: 200,
+        	height: 200,
+        	colorDark : "#000000",
+        	colorLight : "#ffffff",
+        	correctLevel : QRCode.CorrectLevel.H
+        });
+
+        var new_link = document.createElement("A");
+        new_link.innerHTML = links[index].url;
+        new_link.href = links[index].url;
+        var new_wall = document.createElement("TEXTAREA");
+        new_wall.value = links[index].text;
+        new_wall.classList.add("CARDBOARD");
+        var new_delete_button = document.createElement("SPAN");
+        new_delete_button.classList.add("button");
+        new_delete_button.classList.add("link-delete-button");
+        new_delete_button.innerHTML = "DELETE";
+        new_delete_button.onclick = function(){
+            var newtimestamp = parseInt(this.parentElement.getElementsByClassName("timestampdata")[0].innerHTML);
+            var newlinks = [];
+            for(var lindex = 0;lindex < links.length;lindex++){
+                if(links[lindex].timestamp != newtimestamp){
+                    newlinks.push(links[lindex]);
+                }
+            }
+            links = newlinks;
+            drawlinkfeed();
+            savelinks();
+        }
+        new_cardboard_sign.appendChild(new_delete_button);
+        new_cardboard_sign.appendChild(new_qrcode);
+        new_cardboard_sign.appendChild(new_link);
+        new_cardboard_sign.appendChild(new_wall);
+        var newtimestampdata = document.createElement("SPAN");
+        newtimestampdata.classList.add("timestampdata");
+        newtimestampdata.innerHTML = links[index].timestamp.toString();
+        new_cardboard_sign.appendChild(newtimestampdata);
+    }
+}
+
 function savelinks(){
     var httpc = new XMLHttpRequest();
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpc.send("data="+encodeURIComponent(JSON.stringify(links,null,"    "))+"&filename=links.txt");//send text to save-file.php
 }
+
+var httpclinks = new XMLHttpRequest();
+httpclinks.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        links = JSON.parse(this.responseText);    
+        drawlinkfeed();
+    }
+};
+httpclinks.open("GET", "load-file.php?filename=links.txt", true);
+httpclinks.send();
 
 
 function setup(){

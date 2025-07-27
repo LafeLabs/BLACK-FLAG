@@ -27,6 +27,7 @@
         "index.html",
         "link.html",
         "link.txt",
+        "links.txt",
         "metaflag.txt",
         "qrcode.html",
         "readme.html",
