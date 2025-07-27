@@ -156,33 +156,33 @@ input{
     <H1>FLAG GEOMETRY CONTROLS:</H1>
     <TABLE id = "flag-geometry-table">
         <TR>
-            <TD>LEFT:</TD>
+            <TD>LEFT MARGIN:</TD>
             <TD>
-                <INPUT ID= "geometry_left_input">
+                <INPUT ID= "left_margin_input">
             </TD>
         </TR>
         <TR>
-            <TD>TOP:</TD>
+            <TD>TOP MARGIN:</TD>
             <TD>
-                <INPUT ID= "geometry_top_input">
-            </TD>
-        </TR>
-        <TR>
-            <TD>NUMBER OF COLUMNS:</TD>
-            <TD>
-                <INPUT ID= "geometry_number_of_columns_input">
+                <INPUT ID= "top_margin_input">
             </TD>
         </TR>
         <TR>
             <TD>HORIZONTAL GAP:</TD>
             <TD>
-                <INPUT ID= "geometry_horizontal_gap_input">
+                <INPUT ID= "horizontal_gap_input">
             </TD>
         </TR>
         <TR>
             <TD>VERTICAL GAP:</TD>
             <TD>
-                <INPUT ID= "geometry_vertical_gap_input">
+                <INPUT ID= "vertical_gap_input">
+            </TD>
+        </TR>
+        <TR>
+            <TD>NUMBER OF COLUMNS:</TD>
+            <TD>
+                <INPUT ID= "number_of_columns_input">
             </TD>
         </TR>
         <TR>
@@ -260,8 +260,7 @@ else{
 var httpc = new XMLHttpRequest();
 httpc.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-        flag = JSON.parse(this.responseText);    
-        getstring();
+        metaflag = JSON.parse(this.responseText);    
         var httpc2 = new XMLHttpRequest();
         httpc2.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -284,54 +283,38 @@ httpc.onreadystatechange = function() {
 
     }
 };
-httpc.open("GET", "load-file.php?filename=flag.txt", true);
+httpc.open("GET", "load-file.php?filename=metaflag.txt", true);
 httpc.send();
 
 
-function getstring(){
-    flagstring = "";
-    for(var index = 0;index < flag.length;index++){
-        flagstring += flag[index].character;
-    }
-}
-
-function geometrize(){
+function drawflag(){
+        document.getElementById("left_margin_input").value = metaflag.left_margin.toString();   
+        document.getElementById("top_margin_input").value = metaflag.top_margin.toString();   
+        document.getElementById("number_of_columns_input").value = metaflag.number_of_columns.toString();   
+        document.getElementById("horizontal_gap_input").value = metaflag.horizontal_gap.toString();   
+        document.getElementById("vertical_gap_input").value = metaflag.vertical_gap.toString();   
+        
+        if(metaflag.rainbow == true){
+            document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
+            rainbowstring(document.getElementById("rainbowindicator"));
+        }
+        else{
+            document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
+            document.getElementById("rainbowindicator").style.color = "#ff2cb4";
+            document.getElementById("rainbowindicator").innerHTML = "HOT PINK";
+        }    
+    
     flag = [];
-    for(var index = 0;index < flagtext.length;index++){
+    for(var index = 0;index < metaflag.text.length;index++){
         var letter = {};
         letter.color = "#ff2cb4";
-        letter.x = geometry.left + 0.1*(index%geometry.number_of_columns) + geometry.horizontal_gap*(index%geometry.number_of_columns);
-        letter.y = geometry.top + Math.floor(index/geometry.number_of_columns)*0.1 + geometry.vertical_gap*Math.floor(index/geometry.number_of_columns);
+        letter.x = (metaflag.left_margin + 0.05) + 0.1*(index%metaflag.number_of_columns) + metaflag.horizontal_gap*(index%metaflag.number_of_columns);
+        letter.y = (metaflag.top_margin + 0.05) + Math.floor(index/metaflag.number_of_columns)*0.1 + metaflag.vertical_gap*Math.floor(index/metaflag.number_of_columns);
         letter.width = 0.1;
-        letter.character = flagtext.charAt(index);
+        letter.character = metaflag.text.charAt(index);
         flag.push(letter);
-    }        
-}
-
-
-/*
-    var flagstring = "";
-    for(var index = 0;index < flag.length;index++){
-        var glyph = ascii[flag[index].character.charCodeAt(0)];
-        flagstring += flag[index].character;
-        fill(flag[index].color);
-        stroke(flag[index].color);
-        blocksize = unit*flag[index].width;
-        beginShape();
-        for(var gindex = 0;gindex < glyph.length;gindex++){
-            vertex(flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize,flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize);
-        }
-        endShape(CLOSE);
-    }
-    
-    */
-    
-
-function drawflag(){
-
-    background(0);
-    strokeWeight(1);
-    if(geometry.rainbow){
+    }       
+    if(metaflag.rainbow){
         cycleindex = 0;
         for(var index = 0;index < flag.length;index++){
             if(flag[index].character != " "){
@@ -345,7 +328,8 @@ function drawflag(){
             flag[index].color = "#ff2cb4";
         }
     }
-    
+    background(0);
+    strokeWeight(1);
     for(var index = 0;index < flag.length;index++){
         var glyph = ascii[flag[index].character.charCodeAt(0)];
         fill(flag[index].color);
@@ -357,18 +341,16 @@ function drawflag(){
         }
         endShape(CLOSE);
     }
-    document.getElementById("textinput").value = flagstring;
+    document.getElementById("textinput").value = metaflag.text;
     strokeWeight(6);
     stroke("#ff2cb4");
     noFill();
-
-    saveflag();
+    savemetaflag();
 }
 
 
 document.getElementById("textinput").onchange = function(){
-    flagtext = this.value;
-    geometrize();
+    metaflag.text = this.value;
     drawflag();
 }
 
@@ -417,66 +399,31 @@ httpcUpload.onreadystatechange = function() {
 httpcUpload.open("GET", "list-files.php", true);
 httpcUpload.send();
 
-geometry = {};
-
-var httpcgeometry = new XMLHttpRequest();
-httpcgeometry.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        geometry = JSON.parse(this.responseText);
-        document.getElementById("geometry_left_input").value = geometry.left.toString();   
-        document.getElementById("geometry_top_input").value = geometry.top.toString();   
-        document.getElementById("geometry_number_of_columns_input").value = geometry.number_of_columns.toString();   
-        document.getElementById("geometry_horizontal_gap_input").value = geometry.horizontal_gap.toString();   
-        document.getElementById("geometry_vertical_gap_input").value = geometry.vertical_gap.toString();   
-        if(geometry.rainbow == true){
-            document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
-            rainbowstring(document.getElementById("rainbowindicator"));
-        }
-        else{
-            document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
-            document.getElementById("rainbowindicator").style.color = "#ff2cb4";
-            document.getElementById("rainbowindicator").innerHTML = "HOT PINK";
-        }
-    }
-};
-httpcgeometry.open("GET", "load-file.php?filename=geometry.txt", true);
-httpcgeometry.send();
-
-document.getElementById("geometry_left_input").onchange = function(){
-    geometry.left = parseFloat(this.value);
-    savegeometry();
-    geometrize();
+document.getElementById("left_margin_input").onchange = function(){
+    metaflag.left_margin = parseFloat(this.value);
     drawflag();
     
 }
-document.getElementById("geometry_top_input").onchange = function(){
-    geometry.top = parseFloat(this.value);
-    savegeometry();
-    geometrize();
+document.getElementById("top_margin_input").onchange = function(){
+    metaflag.top_margin = parseFloat(this.value);
     drawflag();
 }
-document.getElementById("geometry_number_of_columns_input").onchange = function(){
-    geometry.number_of_columns = parseInt(this.value);
-    savegeometry();
-    geometrize();
+document.getElementById("horizontal_gap_input").onchange = function(){
+    metaflag.horizontal_gap = parseFloat(this.value);
     drawflag();
 }
-document.getElementById("geometry_horizontal_gap_input").onchange = function(){
-    geometry.horizontal_gap = parseFloat(this.value);
-    savegeometry();
-    geometrize();
+document.getElementById("vertical_gap_input").onchange = function(){
+    metaflag.vertical_gap = parseFloat(this.value);
     drawflag();
 }
-document.getElementById("geometry_vertical_gap_input").onchange = function(){
-    geometry.vertical_gap = parseFloat(this.value);
-    savegeometry();
-    geometrize();
+document.getElementById("number_of_columns_input").onchange = function(){
+    metaflag.number_of_columns = parseInt(this.value);
     drawflag();
 }
 
 document.getElementById("rainbowbutton").onclick = function(){
-    geometry.rainbow = !geometry.rainbow;    
-    if(geometry.rainbow == true){
+    metaflag.rainbow = !metaflag.rainbow;    
+    if(metaflag.rainbow == true){
         document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
         rainbowstring(document.getElementById("rainbowindicator"));
     }
@@ -484,7 +431,6 @@ document.getElementById("rainbowbutton").onclick = function(){
         document.getElementById("rainbowindicator").innerHTML = "HOT PINK";
         document.getElementById("rainbowindicator").style.color = "#ff2cb4";
     }
-    savegeometry();
     drawflag();
 }
 
@@ -509,7 +455,7 @@ function loadimagefeed(){
                         if (this.readyState == 4 && this.status == 200) {
                             var svgraw = this.responseText;
                             jsonraw = svgraw.split("<json>")[1].split("</json>")[0];
-                            flag = JSON.parse(jsonraw);
+                            metaflag = JSON.parse(jsonraw);
                             drawflag();
                         }
                     };
@@ -563,11 +509,12 @@ function saveflag(){
     httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag.txt");//send text to save-file.php
 }
 
-function savegeometry(){
+
+function savemetaflag(){
     var httpc = new XMLHttpRequest();
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpc.send("data="+encodeURIComponent(JSON.stringify(geometry,null,"    "))+"&filename=geometry.txt");//send text to save-file.php
+    httpc.send("data="+encodeURIComponent(JSON.stringify(metaflag,null,"    "))+"&filename=metaflag.txt");//send text to save-file.php
 }
 
 function savelinks(){
@@ -599,7 +546,7 @@ document.getElementById("postbutton").onclick = function(){
     
     var timestamp = Math.round((new Date().getTime())/1000).toString();
     var flagsvgstring = "<svg width=\"" + unit.toString() + "\" height=\"" + unit.toString() + "\" viewbox = \"0 0 " + unit.toString() + " " + unit.toString() + "\"  xmlns=\"http://www.w3.org/2000/svg\">\n";
-    flagsvgstring += "\n<!--<json>" + JSON.stringify(flag,null,"    ") + "</json>-->\n";
+    flagsvgstring += "\n<!--<json>" + JSON.stringify(metaflag,null,"    ") + "</json>-->\n";
     flagsvgstring += "<path d = \"M 0 0 L" + unit.toString() + " 0 L" + unit.toString() + " " + unit.toString() +" L0 " + unit.toString() + " L0 0 Z\" stroke = \"black\" stroke-width = \"1\" fill = \"black\" />";
     for(var index = 0;index < flag.length;index++){
         var glyph = ascii[flag[index].character.charCodeAt(0)];
