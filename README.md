@@ -44,6 +44,9 @@ CUT, AND STITCH INTO MORE BLACK FLAGS ALONG HIGHWAY!
 
 SELF-REPLIATING MEDIA MADE OF TRASH ALONG SIDE OF HIGHWAY!
 
+ - [https://trashrobot.net/](https://trashrobot.net/)
+ - [metaflag.txt](metaflag.txt)
+ - [font.txt](font.txt)
  - [index.html](index.html)
  - [http://localhost/BLACK-FLAG/](http://localhost/BLACK-FLAG/)
  - [qrcode.html](qrcode.html)
