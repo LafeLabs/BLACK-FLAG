@@ -1,34 +1,41 @@
 [
     {
-        "color": "red",
+        "color": "#ff2cb4",
         "x": 0.1,
         "y": 0.15,
         "width": 0.1,
         "character": "W"
     },
     {
-        "color": "orange",
-        "x": 0.25,
+        "color": "#ff2cb4",
+        "x": 0.22,
         "y": 0.15,
         "width": 0.1,
         "character": "W"
     },
     {
-        "color": "yellow",
-        "x": 0.4,
+        "color": "#ff2cb4",
+        "x": 0.34,
         "y": 0.15,
         "width": 0.1,
         "character": "W"
     },
     {
-        "color": "green",
-        "x": 0.55,
+        "color": "#ff2cb4",
+        "x": 0.46,
         "y": 0.15,
         "width": 0.1,
         "character": "."
     },
     {
         "color": "#ff2cb4",
+        "x": 0.58,
+        "y": 0.15,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
         "x": 0.7,
         "y": 0.15,
         "width": 0.1,
@@ -36,21 +43,14 @@
     },
     {
         "color": "#ff2cb4",
-        "x": 0.85,
+        "x": 0.8200000000000001,
         "y": 0.15,
         "width": 0.1,
         "character": " "
     },
     {
         "color": "#ff2cb4",
-        "x": 1,
-        "y": 0.15,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 1.1500000000000001,
+        "x": 0.9400000000000001,
         "y": 0.15,
         "width": 0.1,
         "character": " "
@@ -58,155 +58,106 @@
     {
         "color": "#ff2cb4",
         "x": 0.1,
-        "y": 0.35,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "blue",
-        "x": 0.25,
-        "y": 0.35,
-        "width": 0.1,
-        "character": "T"
-    },
-    {
-        "color": "purple",
-        "x": 0.4,
-        "y": 0.35,
-        "width": 0.1,
-        "character": "R"
-    },
-    {
-        "color": "red",
-        "x": 0.55,
-        "y": 0.35,
-        "width": 0.1,
-        "character": "A"
-    },
-    {
-        "color": "orange",
-        "x": 0.7,
         "y": 0.35,
         "width": 0.1,
         "character": "S"
     },
     {
-        "color": "yellow",
-        "x": 0.85,
+        "color": "#ff2cb4",
+        "x": 0.22,
         "y": 0.35,
-        "width": 0.1,
-        "character": "H"
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 1,
-        "y": 0.35,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 1.1500000000000001,
-        "y": 0.35,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "green",
-        "x": 0.1,
-        "y": 0.55,
-        "width": 0.1,
-        "character": "R"
-    },
-    {
-        "color": "blue",
-        "x": 0.25,
-        "y": 0.55,
-        "width": 0.1,
-        "character": "O"
-    },
-    {
-        "color": "purple",
-        "x": 0.4,
-        "y": 0.55,
-        "width": 0.1,
-        "character": "B"
-    },
-    {
-        "color": "red",
-        "x": 0.55,
-        "y": 0.55,
-        "width": 0.1,
-        "character": "O"
-    },
-    {
-        "color": "orange",
-        "x": 0.7,
-        "y": 0.55,
-        "width": 0.1,
-        "character": "T"
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.85,
-        "y": 0.55,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 1,
-        "y": 0.55,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 1.1500000000000001,
-        "y": 0.55,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.1,
-        "y": 0.7500000000000001,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "#ff2cb4",
-        "x": 0.25,
-        "y": 0.7500000000000001,
-        "width": 0.1,
-        "character": " "
-    },
-    {
-        "color": "yellow",
-        "x": 0.4,
-        "y": 0.7500000000000001,
-        "width": 0.1,
-        "character": "."
-    },
-    {
-        "color": "green",
-        "x": 0.55,
-        "y": 0.7500000000000001,
-        "width": 0.1,
-        "character": "N"
-    },
-    {
-        "color": "blue",
-        "x": 0.7,
-        "y": 0.7500000000000001,
         "width": 0.1,
         "character": "E"
     },
     {
-        "color": "purple",
-        "x": 0.85,
-        "y": 0.7500000000000001,
+        "color": "#ff2cb4",
+        "x": 0.34,
+        "y": 0.35,
+        "width": 0.1,
+        "character": "A"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.46,
+        "y": 0.35,
         "width": 0.1,
         "character": "T"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.58,
+        "y": 0.35,
+        "width": 0.1,
+        "character": "T"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.7,
+        "y": 0.35,
+        "width": 0.1,
+        "character": "L"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.8200000000000001,
+        "y": 0.35,
+        "width": 0.1,
+        "character": "E"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.9400000000000001,
+        "y": 0.35,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.1,
+        "y": 0.55,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.22,
+        "y": 0.55,
+        "width": 0.1,
+        "character": " "
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.34,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "."
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.46,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "P"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.58,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "I"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.7,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "N"
+    },
+    {
+        "color": "#ff2cb4",
+        "x": 0.8200000000000001,
+        "y": 0.55,
+        "width": 0.1,
+        "character": "K"
     }
 ]

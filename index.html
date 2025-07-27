@@ -9,7 +9,8 @@
    <!--
 FLY THE BLACK FLAG DOWN BY THE HIGIHWAY!
    -->
-<script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script> 
+<script src="trashmagic.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body> 
@@ -132,20 +133,27 @@ input{
     BACKGROUND-COLOR:#9f8767;
     FONT-FAMILY: COMIC SANS MS;
 }
+#edit_geometry_button{
+    border:solid;
+    text-align:center;
+}
+#rainbowbutton{
+    border:solid;
+}
 </style>
 <div id = "tunnel">
     <input class = "CARDBOARD" id = "textinput">
     <table id = "buttontable">
         <tr>
-            <td class = "button">SKETCH CARDBOARD SIGN</td>
-            <td class = "button">WRITE CARDBOARD SIGN</td>
-            <td class = "button">POST</td>
+            <td id = "postbutton" class = "button">POST</td>
         </tr>
     </table>
 </div>
 <div id = "highway">
     <div id = "qrcode"></div>
+    <h1>TRASH MAGIC WALL:</h1>
     <textarea id = "wall" class = "CARDBOARD"></textarea>
+    <H1>FLAG GEOMETRY CONTROLS:</H1>
     <TABLE id = "flag-geometry-table">
         <TR>
             <TD>LEFT:</TD>
@@ -177,15 +185,31 @@ input{
                 <INPUT ID= "geometry_vertical_gap_input">
             </TD>
         </TR>
+        <TR>
+            <TD class = "button" id = "rainbowbutton">RAINBOW ON/OFF</TD>
+            <td id = "rainbowindicator"></td>
+        </TR>
     </TABLE>
+    <H1>FLAG FEED</H1>
     <div id = "flag-feed"></div>
-    <div id = "image-feed"></div>
-    
+    <h1>UPLOAD IMAGE FEED</h1>
     <form id = "uploadform" action="upload-image.php" method="post" enctype="multipart/form-data">
                 <span id ="uploadspan">UPLOAD:</span>
         <input type="file" name="fileToUpload" id="fileToUpload">
         <input type="submit" value="Upload Image" name="submit" id ="submitinput">
     </form>
+    <div id = "image-feed"></div>
+    
+    <h1>LINK FEED</h1>
+    <table>
+        <tr>
+            <td>ENTER NEW LINK:</td>
+            <TD>
+                <INPUT ID = "newlinkinput">
+            </TD>
+        </tr>
+    </table>
+    <div id = "link-feed"></div>
     <H1>LINK LIST</H1>
     <div id = "link-list">
         <a href = "edit-font.html">EDIT FONT</a>
@@ -194,13 +218,25 @@ input{
         <a href = "readme.html">README</a>
         <a href = "qrcode.html">QR CODE</a>
     </div>
-    <table id ="flagtable"></table>
 </div>
 <script>
 
 unit = 100;
 flag = [];
 ascii = [];
+links = [];
+
+
+flagtext = "";
+rainbow_colors = [
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "purple"
+];
+
 
 if(innerWidth > innerHeight){
     
@@ -225,6 +261,7 @@ var httpc = new XMLHttpRequest();
 httpc.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         flag = JSON.parse(this.responseText);    
+        getstring();
         var httpc2 = new XMLHttpRequest();
         httpc2.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -251,14 +288,66 @@ httpc.open("GET", "load-file.php?filename=flag.txt", true);
 httpc.send();
 
 
-function drawflag(){
-    background(0);
-    strokeWeight(1);
-    
+function getstring(){
+    flagstring = "";
+    for(var index = 0;index < flag.length;index++){
+        flagstring += flag[index].character;
+    }
+}
+
+function geometrize(){
+    flag = [];
+    for(var index = 0;index < flagtext.length;index++){
+        var letter = {};
+        letter.color = "#ff2cb4";
+        letter.x = geometry.left + 0.1*(index%geometry.number_of_columns) + geometry.horizontal_gap*(index%geometry.number_of_columns);
+        letter.y = geometry.top + Math.floor(index/geometry.number_of_columns)*0.1 + geometry.vertical_gap*Math.floor(index/geometry.number_of_columns);
+        letter.width = 0.1;
+        letter.character = flagtext.charAt(index);
+        flag.push(letter);
+    }        
+}
+
+
+/*
     var flagstring = "";
     for(var index = 0;index < flag.length;index++){
         var glyph = ascii[flag[index].character.charCodeAt(0)];
         flagstring += flag[index].character;
+        fill(flag[index].color);
+        stroke(flag[index].color);
+        blocksize = unit*flag[index].width;
+        beginShape();
+        for(var gindex = 0;gindex < glyph.length;gindex++){
+            vertex(flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize,flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize);
+        }
+        endShape(CLOSE);
+    }
+    
+    */
+    
+
+function drawflag(){
+
+    background(0);
+    strokeWeight(1);
+    if(geometry.rainbow){
+        cycleindex = 0;
+        for(var index = 0;index < flag.length;index++){
+            if(flag[index].character != " "){
+                flag[index].color = rainbow_colors[cycleindex%6];
+                cycleindex++;
+            }
+        }
+    }
+    else{
+        for(var index = 0;index < flag.length;index++){
+            flag[index].color = "#ff2cb4";
+        }
+    }
+    
+    for(var index = 0;index < flag.length;index++){
+        var glyph = ascii[flag[index].character.charCodeAt(0)];
         fill(flag[index].color);
         stroke(flag[index].color);
         blocksize = unit*flag[index].width;
@@ -273,10 +362,15 @@ function drawflag(){
     stroke("#ff2cb4");
     noFill();
 
-//    saveflag();
+    saveflag();
 }
 
 
+document.getElementById("textinput").onchange = function(){
+    flagtext = this.value;
+    geometrize();
+    drawflag();
+}
 
 wall = "";
 var httpc = new XMLHttpRequest();
@@ -334,10 +428,65 @@ httpcgeometry.onreadystatechange = function() {
         document.getElementById("geometry_number_of_columns_input").value = geometry.number_of_columns.toString();   
         document.getElementById("geometry_horizontal_gap_input").value = geometry.horizontal_gap.toString();   
         document.getElementById("geometry_vertical_gap_input").value = geometry.vertical_gap.toString();   
+        if(geometry.rainbow == true){
+            document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
+            rainbowstring(document.getElementById("rainbowindicator"));
+        }
+        else{
+            document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
+            document.getElementById("rainbowindicator").style.color = "#ff2cb4";
+            document.getElementById("rainbowindicator").innerHTML = "HOT PINK";
+        }
     }
 };
 httpcgeometry.open("GET", "load-file.php?filename=geometry.txt", true);
 httpcgeometry.send();
+
+document.getElementById("geometry_left_input").onchange = function(){
+    geometry.left = parseFloat(this.value);
+    savegeometry();
+    geometrize();
+    drawflag();
+    
+}
+document.getElementById("geometry_top_input").onchange = function(){
+    geometry.top = parseFloat(this.value);
+    savegeometry();
+    geometrize();
+    drawflag();
+}
+document.getElementById("geometry_number_of_columns_input").onchange = function(){
+    geometry.number_of_columns = parseInt(this.value);
+    savegeometry();
+    geometrize();
+    drawflag();
+}
+document.getElementById("geometry_horizontal_gap_input").onchange = function(){
+    geometry.horizontal_gap = parseFloat(this.value);
+    savegeometry();
+    geometrize();
+    drawflag();
+}
+document.getElementById("geometry_vertical_gap_input").onchange = function(){
+    geometry.vertical_gap = parseFloat(this.value);
+    savegeometry();
+    geometrize();
+    drawflag();
+}
+
+document.getElementById("rainbowbutton").onclick = function(){
+    geometry.rainbow = !geometry.rainbow;    
+    if(geometry.rainbow == true){
+        document.getElementById("rainbowindicator").innerHTML = "RAINBOW";
+        rainbowstring(document.getElementById("rainbowindicator"));
+    }
+    else{
+        document.getElementById("rainbowindicator").innerHTML = "HOT PINK";
+        document.getElementById("rainbowindicator").style.color = "#ff2cb4";
+    }
+    savegeometry();
+    drawflag();
+}
 
 function loadimagefeed(){
 
@@ -408,12 +557,26 @@ function loadimagefeed(){
 }
 
 function saveflag(){
-    document.getElementById("jsonio").value = JSON.stringify(flag,null,"    ");
     var httpc = new XMLHttpRequest();
     httpc.open("POST", "save-file.php", true);
     httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpc.send("data="+encodeURIComponent(JSON.stringify(flag,null,"    "))+"&filename=flag.txt");//send text to save-file.php
 }
+
+function savegeometry(){
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(JSON.stringify(geometry,null,"    "))+"&filename=geometry.txt");//send text to save-file.php
+}
+
+function savelinks(){
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(JSON.stringify(links,null,"    "))+"&filename=links.txt");//send text to save-file.php
+}
+
 
 function setup(){
 
@@ -429,180 +592,50 @@ function mouseClicked() {
     
 }
 
+
+
+
+document.getElementById("postbutton").onclick = function(){
+    
+    var timestamp = Math.round((new Date().getTime())/1000).toString();
+    var flagsvgstring = "<svg width=\"" + unit.toString() + "\" height=\"" + unit.toString() + "\" viewbox = \"0 0 " + unit.toString() + " " + unit.toString() + "\"  xmlns=\"http://www.w3.org/2000/svg\">\n";
+    flagsvgstring += "\n<!--<json>" + JSON.stringify(flag,null,"    ") + "</json>-->\n";
+    flagsvgstring += "<path d = \"M 0 0 L" + unit.toString() + " 0 L" + unit.toString() + " " + unit.toString() +" L0 " + unit.toString() + " L0 0 Z\" stroke = \"black\" stroke-width = \"1\" fill = \"black\" />";
+    for(var index = 0;index < flag.length;index++){
+        var glyph = ascii[flag[index].character.charCodeAt(0)];
+        blocksize = unit*flag[index].width;
+        if(glyph.length > 0){
+            flagsvgstring += "\n<path d = \"M" + (flag[index].x*unit - 0.5*blocksize + glyph[0].x*blocksize).toString() + " " + (flag[index].y*unit - 0.5*blocksize + glyph[0].y*blocksize).toString();
+            
+            
+            for(var gindex = 1;gindex < glyph.length;gindex++){
+                    
+                flagsvgstring += "L " + (flag[index].x*unit - 0.5*blocksize + glyph[gindex].x*blocksize).toString() + " " + (flag[index].y*unit - 0.5*blocksize + glyph[gindex].y*blocksize).toString() + " ";
+                
+            }
+            flagsvgstring += "Z\" stroke = \"" + flag[index].color + "\" stroke-width = \"1\" fill = \"" + flag[index].color + "\" />";            
+        }
+
+
+    }
+    flagsvgstring += "</svg>";
+    
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data=" + encodeURIComponent(flagsvgstring)+"&filename=flag" + timestamp + ".svg");//send text to save-file.php     
+
+}
+
 rainbow(document.getElementById("link-list").getElementsByTagName("A"));
+
+rainbowstring(document.getElementById("rainbowbutton"));
+
 titles = document.getElementsByTagName("H1");
 for(var index = 0;index < titles.length;index++){
     rainbowstring(titles[index]);    
 }
 
-function colorwheel(angle){
-    H = angle;
-    z = 255*(1 - Math.abs((H/60)%2 - 1));
-    if(H < 60){
-        redval = 255;
-        greenval = Math.round(z);
-        blueval = 0;
-    }
-    if(H >= 60 && H < 120){
-        redval = Math.round(z);
-        greenval = 255;
-        blueval = 0;
-    }
-    if(H >= 120 && H < 180){
-        redval = 0;
-        greenval = 255;
-        blueval = Math.round(z);
-    }
-    if(H >= 180 && H < 240){
-        redval = 0;    
-        greenval = Math.round(z);
-        blueval = 255;
-    }
-    if(H >= 240 && H < 300){
-        redval = Math.round(z);    
-        greenval = 0;
-        blueval = 255;
-    }
-    if(H >= 300 && H < 360){
-        redval = 255;    
-        greenval = 0;
-        blueval = Math.round(z);
-    }
-    
-    redstring = redval.toString(16);
-    if(redstring.length < 2){
-        redstring = "0" + redstring;    
-    }
-    greenstring = greenval.toString(16);
-    if(greenstring.length < 2){
-        greenstring = "0" + greenstring; 
-    }
-    bluestring = blueval.toString(16);
-    if(bluestring.length < 2){
-        bluestring = "0" + bluestring; 
-    }
-    color = "#" + redstring + greenstring + bluestring;   
-    return(color);
-}
-
-function rainbowstring(localelement){
-    text = localelement.innerHTML;
-    localelement.innerHTML = "";
-    n = text.length;
-    for(var index = 0; index < n; index++){
-        var newspan = document.createElement("SPAN");    
-        newspan.innerHTML = text.charAt(index);
-    
-        H = index*360/n;
-        z = 255*(1 - Math.abs((H/60)%2 - 1));
-    
-        if(H < 60){
-            redval = 255;
-            greenval = Math.round(z);
-            blueval = 0;
-        }
-        if(H >= 60 && H < 120){
-            redval = Math.round(z);
-            greenval = 255;
-            blueval = 0;
-        }
-        if(H >= 120 && H < 180){
-            redval = 0;
-            greenval = 255;
-            blueval = Math.round(z);
-        }
-        if(H >= 180 && H < 240){
-            redval = 0;    
-            greenval = Math.round(z);
-            blueval = 255;
-        }
-        if(H >= 240 && H < 300){
-            redval = Math.round(z);    
-            greenval = 0;
-            blueval = 255;
-        }
-        if(H >= 300 && H < 360){
-            redval = 255;    
-            greenval = 0;
-            blueval = Math.round(z);
-        }
-        
-        redstring = redval.toString(16);
-        if(redstring.length < 2){
-            redstring = "0" + redstring;    
-        }
-        greenstring = greenval.toString(16);
-        if(greenstring.length < 2){
-            greenstring = "0" + greenstring; 
-        }
-        bluestring = blueval.toString(16);
-        if(bluestring.length < 2){
-            bluestring = "0" + bluestring; 
-        }
-        color = "#" + redstring + greenstring + bluestring;   
-        newspan.style.color = color;
-        localelement.appendChild(newspan);
-    }
-    
-
-}
-function rainbow(localarray){
-    n = localarray.length;
-    theta = 0;
-    for(var index = 0;index < n;index++){
-    
-        H = index*360/n;
-        z = 255*(1 - Math.abs((H/60)%2 - 1));
-    
-        if(H < 60){
-            redval = 255;
-            greenval = Math.round(z);
-            blueval = 0;
-        }
-        if(H >= 60 && H < 120){
-            redval = Math.round(z);
-            greenval = 255;
-            blueval = 0;
-        }
-        if(H >= 120 && H < 180){
-            redval = 0;
-            greenval = 255;
-            blueval = Math.round(z);
-        }
-        if(H >= 180 && H < 240){
-            redval = 0;    
-            greenval = Math.round(z);
-            blueval = 255;
-        }
-        if(H >= 240 && H < 300){
-            redval = Math.round(z);    
-            greenval = 0;
-            blueval = 255;
-        }
-        if(H >= 300 && H < 360){
-            redval = 255;    
-            greenval = 0;
-            blueval = Math.round(z);
-        }
-        
-        redstring = redval.toString(16);
-        if(redstring.length < 2){
-            redstring = "0" + redstring;    
-        }
-        greenstring = greenval.toString(16);
-        if(greenstring.length < 2){
-            greenstring = "0" + greenstring; 
-        }
-        bluestring = blueval.toString(16);
-        if(bluestring.length < 2){
-            bluestring = "0" + bluestring; 
-        }
-        color = "#" + redstring + greenstring + bluestring;
-        //console.log(color);
-        localarray[index].style.backgroundColor = color;// + "80";
-        localarray[index].style.borderColor = color;
-    }
-}
 </script>
 </body>
 </html>
